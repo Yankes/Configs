@@ -1,0 +1,97 @@
+[alias]
+#logs
+	x-l = log -20 --pretty='tformat:%C(auto)%h %s %d'
+	x-gl = log -40 --pretty='tformat:%C(auto)%h %s %d' --graph
+	x-bl = !"f() { : git show-branch ; git show-branch --color \"$@\" | head -80; }; f"
+	x-rl = reflog show -20 --pretty='tformat:%C(auto)%h %gd: %gs %d'
+	x-ol = !"git config --file .gitmodules --get-regexp path | awk '{ print $2 }'"
+	x-nl = !"f() { : git log ; git log --color=always \"$@\" | less -R; }; f"
+	x-s = show
+	x-ns = !"f() { : git show ; git show --color=always \"$@\" | less -R; }; f"
+	x-i = add -i
+
+#rebase
+	x-rr = !"f() { : git rebase ; git -c rebase.missingCommitsCheck=error rebase -i --rebase-merges \"$@\"; }; f"
+	x-rc = rebase --continue
+	x-ra = rebase --abort
+	x-re = rebase --edit-todo
+
+#cherry-pick
+	x-pp = cherry-pick
+	x-pa = cherry-pick --abort
+	x-pc = cherry-pick --continue
+
+#merge
+	x-mm = merge --no-ff
+	x-mf = merge --ff
+	x-mc = commit
+	x-ma = merge --abort
+	x-mt = !"f() { : git mergetool ; git mergetool \"$@\"; find . -iregex '.*\\.orig$' -exec rm {} \\; ; }; f"
+	x-mhh = !"f() { : git checkout ; bash -c 'readarray -d '\\'\\'' -t a < <(git status --porcelain --null | grep -P --null-data '\\''^(U.|.U|AA|DD|DA) '\\'' | cut --zero-terminated -c 4-); if [[ -v a ]] && (($# != 0)); then printf \"%s\\n\" \"${a[@]}\" && git x-hh \"$@\" -- \"${a[@]}\" && git add -- \"${a[@]}\"; fi;' _ \"$@\"; }; f"
+
+#change diff operations
+	x-da = diff
+	x-dc = diff
+	x-dr = diff --staged
+	x-dh = diff HEAD
+
+#change hunk operations
+	x-ha = !"f() { : git add ; git add -AN; git add -p \"$@\"; }; f"
+	x-hc = checkout -p
+	x-hr = reset -p
+	x-hi = add -i
+	x-hh = !"f() { : git checkout ; git add -AN && if (($# == 0)); then git checkout -p HEAD; else git checkout -p \"$@\"; fi && git add -AN; }; f"
+
+#chagne bulk operations
+	x-ba = add .
+	x-bc = checkout
+	x-br = reset --mixed
+	x-bh = reset --hard
+
+#branch operations
+	x-bb = branch
+	x-bn = !"f() { : git checkout ; ( (($# == 2)) || (echo \"required two args\"; false) ) && git checkout \"$2\" && git pull && git checkout -b \"$@\" && (git branch --unset-upstream &>/dev/null; true); }; f"
+	x-bd = branch -d
+
+#diff operations
+	x-df = !"f() { : git diff ; git diff \"$@\"; }; f"
+	x-dd = status
+
+#submodule
+	x-om = !"f() { git submodule foreach \"echo && echo --- Next Submodule ---- && echo && git ${*@Q}\"; }; f"
+	x-oo = !"f() { git submodule foreach \"echo && echo --- Next Submodule ---- && echo && git ${*@Q}\" && echo && echo ---- Main module ---- && echo && git \"$@\"; }; f"
+	x-oe = !"f() { git submodule foreach \"echo && echo --- Next Submodule ---- && echo && git ${*@Q}\" && echo && echo ---- Main module ---- && echo && git add $(git x-ol) && git \"$@\"; }; f"
+	x-occ = !"f() { : git commit ; git x-oe x-cc \"$@\"; }; f"
+	x-oce = !"f() { : git commit ; git x-oe x-ce \"$@\"; }; f"
+	x-oha = !"f() { git x-oo x-ha; }; f"
+
+#remote
+	x-uf = fetch
+	x-up = !"f() { : git push ; if [[ $(git status --porcelain) ]]; then echo \"dirty working tree\"; else git push \"$@\"; fi; }; f"
+	x-uu = pull
+	x-ub = !"f() { : git checkout ; current_branch=$(git rev-parse --abbrev-ref HEAD); if [[ $(git status --porcelain) || "$current_branch" == HEAD || "$current_branch" == "$1" ]]; then echo \"dirty working tree or wrong branches\"; else git checkout "$1" && git pull --ff-only && git merge "$current_branch"; fi; }; f"
+
+#commit
+	x-cc = commit
+	x-cs = !"f(){ git reset -p HEAD~1 -- $2 && git commit --amend --no-edit && git add . && if (($# == 0)); then git commit -m\".stash\"; else git commit -m\"$1\"; fi; }; f"
+	x-ce = commit --amend
+
+#stash
+	x-tt = stash
+	x-ty = stash apply --index
+	x-to = stash pop --index
+	x-ts = stash show
+	x-tl = stash list
+	x-td = stash drop
+[interactive]
+	singlekey = true
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	keepBackup = false
+[core]
+	autocrlf = true
+[diff]
+	noprefix = false
+	mnemonicprefix = false
