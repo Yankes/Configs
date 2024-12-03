@@ -34,8 +34,8 @@ if &diff
 endif
 
 command YamlStyle execute ":set ts=2 sw=2 et smartindent"
-command PurgeDos execute ":%s/\s*\r//e"
-command FindConflict execute "/<<<<<<<"
+command PurgeDos execute ":%s/\\s*\r//e"
+command FindConflict execute "/^\\(<<<<<<<\\||||||||\\|=======\\|>>>>>>>\\)"
 
 function SetStyle()
     syn match myConstant '^<<<<<<<.*'
