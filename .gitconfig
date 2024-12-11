@@ -60,7 +60,7 @@
 
 #branch operations
 	x-bb = branch
-	x-bn = !"f() { : git checkout ; ( (($# == 2)) || (echo \"Trzeba podac dwa parametry\"; false) ) && git checkout \"$2\" && git pull && git checkout -b \"$@\" && (git branch --unset-upstream &>/dev/null; true); }; f"
+	x-bn = !"f() { : git checkout ; ( (($# == 2)) || (echo \"required two args\"; false) ) && git checkout \"$2\" && git pull && git checkout -b \"$@\" && (git branch --unset-upstream &>/dev/null; true); }; f"
 	x-bd = branch -d
 
 #diff operations
@@ -77,9 +77,9 @@
 
 #remote
 	x-uf = fetch
-	x-up = !"f() { : git push ; if [[ $(git status --porcelain) ]]; then echo \"sa nie zapisane zmiany\"; else git push \"$@\"; fi; }; f"
+	x-up = !"f() { : git push ; if [[ $(git status --porcelain) ]]; then echo \"dirty working tree\"; else git push \"$@\"; fi; }; f"
 	x-uu = pull
-	x-ub = !"f() { : git checkout ; current_branch=$(git rev-parse --abbrev-ref HEAD); if [[ $(git status --porcelain) || "$current_branch" == HEAD || "$current_branch" == "$1" ]]; then echo \"sa nie zapisane zmiany lub zly obecny lub docelowy branch\"; else git checkout "$1" && git pull --ff-only && git merge "$current_branch"; fi; }; f"
+	x-ub = !"f() { : git checkout ; current_branch=$(git rev-parse --abbrev-ref HEAD); if [[ $(git status --porcelain) || "$current_branch" == HEAD || "$current_branch" == "$1" ]]; then echo \"dirty working tree or wrong branches\"; else git checkout "$1" && git pull --ff-only && git merge "$current_branch"; fi; }; f"
 
 #commit
 	x-cc = commit
