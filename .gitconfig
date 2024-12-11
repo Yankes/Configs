@@ -1,15 +1,15 @@
 [alias]
 #hack
-	h-old-interactive-call = !"f (){ PERLLIB=/mingw64/share/perl5 ~/git-add--interactive.perl --patch=$1 \"${@:2}\"; }; f"
+	h-old-interactive-call = !"f (){ PERLLIB=/mingw64/share/perl5 ~/.git-add--interactive.perl --patch=$1 \"${@:2}\"; }; f"
 	h-old-interactive = !"f (){ if [[ $2 == -- ]]; then git h-old-interactive-call $1 HEAD -- \"${@:3}\"; elif [[ $3 == -- ]]; then git h-old-interactive-call $1 $2 -- \"${@:4}\"; elif (( $# <= 2 )); then git h-old-interactive-call $1 \"${@:2:1}\" --; else echo "missing -- when apssed multiple args"; false; fi;  }; f"
 
-	h-add = !"f (){ git h-old-interactive stage \"$@\"; }; f"
-	h-checkout = !"f (){ git h-old-interactive checkout \"$@\"; }; f"
-	h-reset = !"f (){ git h-old-interactive reset \"$@\"; }; f"
+	#h-add = !"f (){ git h-old-interactive stage \"$@\"; }; f"
+	#h-checkout = !"f (){ git h-old-interactive checkout \"$@\"; }; f"
+	#h-reset = !"f (){ git h-old-interactive reset \"$@\"; }; f"
 
-	#h-add = add -p
-	#h-checkout = checkout -p
-	#h-reset = reset -p
+	h-add = add -p
+	h-checkout = checkout -p
+	h-reset = reset -p
 
 #logs
 	x-l = log -20 --pretty='tformat:%C(auto)%h %s %d'
