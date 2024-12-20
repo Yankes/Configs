@@ -15,6 +15,7 @@ set encoding=utf-8
 set relativenumber
 set number
 set list
+set background=dark
 
 hi NonText ctermfg=darkgray
 hi SpecialKey ctermfg=darkgray
