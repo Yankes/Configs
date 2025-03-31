@@ -49,6 +49,8 @@ function SetStyle()
 endfunction
 
 au FileType * call SetStyle()
+au BufReadPost */.git/addp-hunk-edit.diff e ++ff=unix
+au BufReadPost *.csproj set nofixendofline
 
 inoremap <C-Space> <C-N>
 
