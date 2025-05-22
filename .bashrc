@@ -45,7 +45,7 @@ rt1() {
 rt2() {
 	if [[ $# -gt 0 ]]; then
 		false ||
-			tmux respawnp -k -t 2 "$(printf "%q " "${@}") && read || (echo 'Error, closing...'; sleep 5s)" 2>/dev/null ||
+			tmux respawnp -k -t .2 "$(printf "%q " "${@}") && read || (echo 'Error, closing...'; sleep 5s)" 2>/dev/null ||
 			tmux split-pane -h -d "$(printf "%q " "${@}") && read || (echo 'Error, closing...'; sleep 5s)";
 	else
 		echo "no command given";
