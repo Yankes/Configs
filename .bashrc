@@ -52,5 +52,19 @@ rt2() {
 	fi;
 }
 
+
+rt3() {
+        if [[ $# -gt 0 ]]; then
+                local tt;
+                tt="$(printf "%q " "${@}")";
+                tmux new-window
+                tmux send-keys -l '' "${tt/% /};" send-keys ENTER;
+        else
+                echo "no command given";
+        fi;
+}
+
+
 complete -F _proxy_command_complete rt1
 complete -F _proxy_command_complete rt2
+complete -F _proxy_command_complete rt3
