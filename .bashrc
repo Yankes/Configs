@@ -54,14 +54,15 @@ rt2() {
 
 
 rt3() {
-        if [[ $# -gt 0 ]]; then
-                local tt;
-                tt="$(printf "%q " "${@}")";
-                tmux new-window
-                tmux send-keys -l '' "${tt/% /};" send-keys ENTER;
-        else
-                echo "no command given";
-        fi;
+	if [[ $# -gt 0 ]]; then
+		local tt;
+		tt="$(printf "%q " "${@}")";
+		tmux new-window
+		sleep 1
+		tmux send-keys -l '' "${tt/% /};" send-keys ENTER;
+	else
+		echo "no command given";
+	fi;
 }
 
 
