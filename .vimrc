@@ -16,6 +16,7 @@ set relativenumber
 set number
 set list
 set background=dark
+set mouse=a
 
 hi NonText ctermfg=darkgray
 hi SpecialKey ctermfg=darkgray
