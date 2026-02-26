@@ -1,7 +1,7 @@
 [alias]
 #hack
 	h-old-interactive-call = !"f (){ PERLLIB=/mingw64/share/perl5 ~/.git-add--interactive.perl --patch=$1 \"${@:2}\"; }; f"
-	h-old-interactive = !"f (){ if [[ $2 == -- ]]; then git h-old-interactive-call $1 HEAD -- \"${@:3}\"; elif [[ $3 == -- ]]; then git h-old-interactive-call $1 $2 -- \"${@:4}\"; elif (( $# <= 2 )); then git h-old-interactive-call $1 \"${@:2:1}\" --; else echo "missing -- when apssed multiple args"; false; fi;  }; f"
+	h-old-interactive = !"f (){ if [[ $2 == -- ]]; then git h-old-interactive-call $1 HEAD -- \"${@:3}\"; elif [[ $3 == -- ]]; then git h-old-interactive-call $1 $2 -- \"${@:4}\"; elif (( $# <= 2 )); then git h-old-interactive-call $1 \"${@:2:1}\" --; else echo "missing -- when used multiple args"; false; fi;  }; f"
 
 	#h-add = !"f (){ git h-old-interactive-call stage -- \"$@\"; }; f"
 	#h-checkout = !"f (){ git h-old-interactive checkout \"$@\"; }; f"
@@ -10,6 +10,7 @@
 	h-add = add -p
 	h-checkout = checkout -p
 	h-reset = reset -p
+	h-checkout-all = !"f (){ if [[ $1 == -- ]]; then git checkout HEAD -- \"${@:2}\"; elif [[ $2 == -- ]]; then git checkout $1 -- \"${@:2}\"; elif (( $# <= 2 )); then gitcheckout $1 -- .; else echo "missing -- when used multiple args"; false; fi;  }; f"
 
 #logs
 	x-l = log -20 --pretty='tformat:%C(auto)%h %s %d'
@@ -53,13 +54,14 @@
 	x-hh = !"f() { : git checkout ; git add -AN && if (($# == 0)); then git h-checkout HEAD; else git h-checkout \"$@\"; fi && git add -AN; }; f"
 
 #chagne bulk operations
-	x-ba = add .
-	x-bc = checkout
-	x-br = reset --mixed
-	x-bh = reset --hard
+	x-aa = add .
+	x-ac = h-checkout-all
+	x-ar = reset --mixed
+	x-ah = reset --hard
 
 #branch operations
 	x-bb = branch
+	x-bc = checkout
 	x-bn = !"f() { : git checkout ; ( (($# == 2)) || (echo \"required two args\"; false) ) && git checkout \"$2\" && git pull && git checkout -b \"$@\" && (git branch --unset-upstream &>/dev/null; true); }; f"
 	x-bd = branch -d
 
