@@ -37,7 +37,7 @@
 #merge
 	x-mm = merge --no-ff
 	x-mf = merge --ff
-	x-mc = commit
+	x-mc = !"f() { : git commit ; if git status --porcelain --null | grep -P --quiet --null-data '^(U.|.U|AA|DD|DA|.M|\\?\\?) '; then echo \"dirty working tree\"; return 1; else  git commit \"$@\"; fi; }; f"
 	x-ma = merge --abort
 	x-mt = !"f() { : git mergetool ; git mergetool \"$@\"; find . -iregex '.*\\.orig$' -exec rm {} \\; ; }; f"
 	x-mhh = !"f() { : git checkout ; bash -c 'readarray -d '\\'\\'' -t a < <(git status --porcelain --null | grep -P --null-data '\\''^(U.|.U|AA|DD|DA) '\\'' | cut --zero-terminated -c 4-); if [[ -v a ]] && (($# != 0)); then printf \"%s\\n\" \"${a[@]}\" && git x-hh \"$@\" -- \"${a[@]}\" && git add -- \"${a[@]}\"; fi;' _ \"$@\"; }; f"
