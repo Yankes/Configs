@@ -44,7 +44,6 @@
 
 #change diff operations
 	x-da = diff
-	x-dc = diff
 	x-dr = diff --staged
 	x-dh = diff HEAD
 
