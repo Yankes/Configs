@@ -50,19 +50,19 @@
 
 #change hunk operations
 	x-ha = !"f() { : git add ; git add -AN; git h-add \"$@\"; }; f"
-	x-hc = h-checkout
 	x-hr = h-reset
 	x-hh = !"f() { : git checkout ; git add -AN && if (($# == 0)); then git h-checkout HEAD; else git h-checkout \"$@\"; fi && git add -AN; }; f"
 
 #chagne bulk operations
 	x-aa = !"f() { : git add ; git h-add-all \"$@\"; }; f"
-	x-ac = !"f() { : git checkout ; git h-checkout-all \"$@\"; }; f"
-	x-ar = reset --mixed
-	x-ah = reset --hard
+	x-ar = !"f() { : git add ; git reset --mixed HEAD -- \"$@\"; }; f"
+	x-ah = !"f() { : git checkout ;git add -AN && if (($# == 0)); then git h-checkout-all HEAD; else git h-checkout-all \"$@\"; fi && git add -AN; }; f"
 
 #branch operations
 	x-bb = branch
 	x-bc = checkout
+	x-br = reset --mixed
+	x-bh = reset --hard
 	x-bn = !"f() { : git checkout ; ( (($# == 2)) || (echo \"required two args\"; false) ) && git checkout \"$2\" && git pull && git checkout -b \"$@\" && (git branch --unset-upstream &>/dev/null; true); }; f"
 	x-bd = branch -d
 
