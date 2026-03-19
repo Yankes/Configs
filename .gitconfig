@@ -24,7 +24,7 @@
 	x-ns = !"f() { : git show ; git show --color=always \"$@\" | less -R; }; f"
 
 #rebase
-	x-rr = !"f() { : git rebase ; git -c rebase.missingCommitsCheck=error -c sequence.editor='vim -R -c \"set keywordprg=git\\ show\"' rebase -i --rebase-merges \"$@\"; }; f"
+	x-rr = !"f() { : git rebase ; git -c rebase.missingCommitsCheck=error -c sequence.editor='vim -c \"set keywordprg=git\\ show\"' rebase -i --rebase-merges \"$@\"; }; f"
 	x-rc = rebase --continue
 	x-ra = rebase --abort
 	x-re = rebase --edit-todo
