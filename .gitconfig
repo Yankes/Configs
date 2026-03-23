@@ -19,12 +19,12 @@
 	x-bl = !"f() { : git show-branch ; git show-branch --color \"$@\" | head -80; }; f"
 	x-rl = reflog show -20 --pretty='tformat:%C(auto)%h %gd: %gs %d'
 	x-ol = !"git config --file .gitmodules --get-regexp path | awk '{ print $2 }'"
-	x-nl = !"f() { : git log ; git log --color=always \"$@\" | less -R; }; f"
+	x-nl = !"f() { { echo '# from last commit descending:'; git log --oneline -60; } | vim -R --not-a-term -c 'syntax on | set syntax=gitrebase' -c 'exe \"func GitShowFunc(word)\\nsilent exe \\\"!git -c core.pager='\\''less -+F'\\'' show \\\" .. a:word\\nredraw!\\nendfunc\"' -c 'com -nargs=1 GitShow call GitShowFunc(<q-args>)' -c 'set keywordprg=:GitShow' -; }; f"
 	x-s = show
 	x-ns = !"f() { : git show ; git show --color=always \"$@\" | less -R; }; f"
 
 #rebase
-	x-rr = !"f() { : git rebase ; git -c rebase.missingCommitsCheck=error -c sequence.editor='vim -c \"set keywordprg=git\\ show\"' rebase -i --rebase-merges \"$@\"; }; f"
+	x-rr = !"f() { : git rebase ; git -c rebase.missingCommitsCheck=error -c sequence.editor='vim -c \"exe \\\"func GitShowFunc(word)\\\\nsilent exe \\\\\\\"!git -c core.pager='\\''less -+F'\\'' show \\\\\\\" .. a:word\\\\nredraw!\\\\nendfunc\\\"\" -c \"command -nargs=1 GitShow call GitShowFunc(<q-args>)\" -c \"set keywordprg=:GitShow\"' rebase -i --rebase-merges \"$@\"; }; f"
 	x-rc = rebase --continue
 	x-ra = rebase --abort
 	x-re = rebase --edit-todo
