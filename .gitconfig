@@ -6,6 +6,8 @@
 	#h-add = !"f (){ git h-old-interactive-call stage -- \"$@\"; }; f"
 	#h-checkout = !"f (){ git h-old-interactive checkout \"$@\"; }; f"
 	#h-reset = !"f (){ git h-old-interactive reset \"$@\"; }; f"
+	h-check-clear = !"f (){ git diff-index --quiet HEAD -- || (echo \"Changes in working tree\"  && false); }; f"
+	h-check-rebase = !"f (){ (test -d "$(git rev-parse --git-path rebase-merge)" || test -d "$(git rev-parse --git-path rebase-apply)") 2>/dev/null || (echo \"Not in merge\"  && false); }; f"
 
 	h-add = add -p --
 	h-checkout = checkout -p --
@@ -28,6 +30,9 @@
 	x-rc = rebase --continue
 	x-ra = rebase --abort
 	x-re = rebase --edit-todo
+	x-rj = !"f(){ git h-check-clear && git h-check-rebase && GIT_EDITOR='sed -i \"$ a pick $(git rev-parse HEAD)\"' git x-re && git x-bh HEAD~1; }; f"
+	x-rb = !"f(){ git h-check-clear && git h-check-rebase && GIT_EDITOR='sed -i \"1 i pick $(git rev-parse HEAD)\"' git x-re && git x-bh HEAD~1; }; f"
+	x-rf = !"f(){ git h-check-clear && git h-check-rebase && GIT_EDITOR='sed -i \"'${1:-1}' a break\"' git x-re && git x-rc; }; f"
 
 #cherry-pick
 	x-pp = cherry-pick
