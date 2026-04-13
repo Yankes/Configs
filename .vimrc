@@ -7,6 +7,7 @@ set tabstop=4
 set shiftwidth=4
 set ffs=unix
 
+set nomodeline
 set backspace=start
 set nowrap
 set nu
