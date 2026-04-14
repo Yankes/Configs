@@ -11,6 +11,86 @@ PS1="\[\033[1;34m\][\$(date +%H:%M)][\u@\h:\w]\$(__git_ps1)\[\033[0m\]\n$ "
 
 
 
+function detached_git()
+{
+	local workTree=$1
+	local gitRepo=$2
+	local op=$3
+	local restArgs=("${@:4}")
+	local gitDetachArgs=(-C "$workTree" --work-tree="$workTree" --git-dir="$gitRepo"/.git);
+	case $op in
+		clone)
+			if [[ -d "$gitRepo" ]]; then
+				echo "Already created";
+				return 1;
+			else
+				git clone "${restArgs[1]}" "$gitRepo" &&
+				if ! grep -q '^*$' "$gitRepo"/.git/info/exclude; then
+					echo '*' >> "$gitRepo"/.git/info/exclude;
+				fi;
+			fi;
+		;;
+
+		init)
+			if [[ -d "$gitRepo" ]]; then
+				echo "Already created";
+				return 1;
+			else
+				mkdir "$gitRepo" && (cd "$gitRepo" && git init) &&
+				if ! grep -q '^*$' "$gitRepo"/.git/info/exclude; then
+					echo '*' >> "$gitRepo"/.git/info/exclude;
+				fi;
+			fi;
+		;;
+
+		diff)
+			git "${gitDetachArgs[@]}" diff -- "${restArgs[@]}"
+		;;
+
+		add)
+			git "${gitDetachArgs[@]}" add -f -- "${restArgs[@]}"
+		;;
+
+		checkin)
+			git "${gitDetachArgs[@]}" add -p -- "${restArgs[@]}"
+		;;
+
+		checkout)
+			git "${gitDetachArgs[@]}" checkout -p HEAD~0 -- "${restArgs[@]}"
+		;;
+
+		commit)
+			(cd "$gitRepo"; git commit "${restArgs[@]}")
+		;;
+
+		push)
+			(cd "$gitRepo"; git push "${restArgs[@]}")
+		;;
+
+		pull)
+			(cd "$gitRepo"; git pull "${restArgs[@]}")
+		;;
+
+		raw-work-tree)
+			git "${gitDetachArgs[@]}" "${restArgs[@]}"
+		;;
+
+		raw-git-repo)
+			(cd "$gitRepo"; git "${restArgs[@]}")
+		;;
+
+		*)
+			echo "Unknown option";
+			return 1;
+		;;
+	esac;
+}
+
+function config_git()
+{
+	detached_git "$HOME" "$HOME/Configs" "$@"
+}
+
 _proxy_command_complete() {
 	local first second old_line;
 	first=$COMP_WORDS;
