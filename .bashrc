@@ -24,7 +24,7 @@ function detached_git()
 				echo "Already created";
 				return 1;
 			else
-				git clone "${restArgs[1]}" "$gitRepo" &&
+				git clone "${restArgs[0]}" "$gitRepo" &&
 				if ! grep -q '^*$' "$gitRepo"/.git/info/exclude; then
 					echo '*' >> "$gitRepo"/.git/info/exclude;
 				fi;
